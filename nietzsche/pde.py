@@ -1,13 +1,14 @@
 """
-PDE class and that has 
-
+PDE class
+=========
 PDEs that the module should be able to solve are:
+1.0 Diffusion as a subclass, this subclass should be able
+    to take a space grid and a time grid with some ic and bc
+    to solve the problem. 
 
-- Diffusion as a subclass, this subclass should be able to take a space grid and a time grid with some ic and bc
-to solve the problem. 
-
-- 
-
+2.0 Vibration as a subclass, this subclass should be able to
+    to take a space grid and a time grid with some ic and bc
+    to solve the problem.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,8 +19,31 @@ from time_ import Time
 
 
 class PDE:
+    """
+    Description:
+    ============
+        General PDE class
+
+    Attributes:
+    ============
+        about: [str]
+            String about the PDE being solved. This
+            can be used for reports generated on the solve
+        solution_mode: [choice]*
+            Choice of:
+            - Finite Difference Method [FDM]
+            - Finite Element Method [FEM]
+        space: [np.ndarray]
+            sapce domain, this could be 1D, 2D or 3D
+        time: [np.ndarray]
+            time domain
+    """
+
     def __init__(self) -> None:
-        pass
+        self.about = None
+        self.solution_mode = None
+        self.space = None
+        self.time = None
 
     def setup(self):
         pass
@@ -31,15 +55,33 @@ class PDE:
 class Diffusion(PDE):
     def __init__(self) -> None:
         super().__init__()
-        # supposed to contain a description about the PDE class
+        # supposed to contain a description about the PDE
         self.about = None
-        self.solution_mode = "FDM"          # sets the solution mode for the PDE
+        self.solution_mode = "FDM"  # sets the solution mode
         self.space = None
         self.time = None
         self.primal_domain = None
         self.dt = None
 
     def set_dt(self):
+        """
+        Description:
+        ============
+            Sets the time step for the simulation.
+
+        Parameters:
+        ============
+            None
+
+        Returns:
+        ============
+            None
+
+        Example:
+        ============
+        >>> ti = Time()
+        >>> ti.set_dt()  # set the dt value for the time object
+        """
         if self.time is not None:
             self.dt = self.time[1] - self.time[0]
         else:
@@ -50,14 +92,17 @@ class Diffusion(PDE):
         """
         Description:
         ============
-            Sets the primal field of the variable that diffuses over time and space in the simulation.
+            Sets the primal field of the variable that diffuses over time 
+            and space in the simulation.
 
         Parameters:
         ============
             space_object: np.ndarry
-                space parameter to be used in the diffusion simulation. This is obtained after using the space.setup method
+                space parameter to be used in the diffusion simulation. 
+                This is obtained after using the space.setup method
             time_object: np.ndarray
-                time parameter to be used in the diffusion simulation. This is obtained after using the time.setup method
+                time parameter to be used in the diffusion simulation. 
+                This is obtained after using the time.setup method
 
         Returns:
         ============
@@ -111,7 +156,7 @@ class Diffusion(PDE):
                               thickness] = primal_domain[i, thickness:-thickness, thickness:-thickness]
         return new_primal_domain
 
-    def initial_condition(self, general_value: float, specific_value: float):
+    def initial_condition(self, general_value: float, specific_value: float, x_ilocation, x_elocation, y_ilocation, y_elocation):
         """
         Description:
         =============
@@ -141,9 +186,11 @@ class Diffusion(PDE):
         """
         if self.primal_domain is not None:
             self.primal_domain[0].fill(general_value)
-            self.primal_domain[0, 2:3, 2:3] = specific_value
+            self.primal_domain[0, x_ilocation:x_elocation,
+                               y_ilocation:y_elocation] = specific_value
         else:
             raise ValueError('Could not set primal domain correctly!')
+        return None
         return None
 
     def solve(self, step_constant):
@@ -201,18 +248,19 @@ if __name__ == "__main__":
     # set space
     s = Space()
     s.dimension = "2D"
-    dd_space = s.setup(x_step=60, y_step=60)
+    x = s.setup(x_step=60, y_step=60)
 
     # set time
-    tt = Time()
-    t = tt.setup(step=5000)
+    time = Time()
+    t = time.setup(step=500)
 
     # set diffusion
     diff = Diffusion()
-    diff.set_primal_domain(space_object=dd_space, time_object=t)
-    diff.initial_condition(general_value=15.0, specific_value=0.00)
+    diff.set_primal_domain(space_object=x, time_object=t)
+    diff.initial_condition(general_value=0.0, specific_value=5.00,
+                           x_ilocation=4, x_elocation=6, y_ilocation=10, y_elocation=15)
     diff.primal_domain = diff.boundary_condition(
-        diff.primal_domain, constant_value=2.0, thickness=1)
+        diff.primal_domain, constant_value=0.0, thickness=1)
     diff.solve(0.1)
     # for i in range(diff.primal_domain.shape[0]):
     # plot_array(diff.primal_domain[i,:,:])
