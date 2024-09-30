@@ -60,3 +60,12 @@ class Space:
             return [x]
         else:
             raise ValueError('Failed to set the space for solution!')
+
+
+if __name__ == "__main__":
+    s = Space()
+    s.dimension = Dimension.DDD.value
+    x = s.setup()
+    print(s.dimension)
+    print(s.geometry)
+    print(s.setup())

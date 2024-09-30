@@ -1,6 +1,6 @@
+from ..nietzsche.time_ import Time
 import numpy as np
 import pytest
-from nietzsche.time_ import Time
 
 
 class TestTime:

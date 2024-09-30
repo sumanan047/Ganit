@@ -185,10 +185,19 @@ class Diffusion(PDE):
         elif primal_domain.ndim == 3:
             # iterate over the time axis i.e., new_primal_domain.shape[0]
             for i in range(new_primal_domain.shape[0]):
-                new_primal_domain[i, thickness:-thickness, thickness:-
-                                  thickness] = primal_domain[i,
-                                                             thickness:-thickness,
-                                                             thickness:-thickness]
+                new_primal_domain[i, thickness:-thickness,
+                                  thickness:-thickness] = primal_domain[i,
+                                                                        thickness:-thickness,
+                                                                        thickness:-thickness]
+
+        elif primal_domain.ndim == 4:
+            # iterate over the time axis i.e, new_primal_domain.shape[0]
+            for i in range(new_primal_domain.shape[0]):
+                new_primal_domain[i, thickness:-thickness,
+                                  thickness:-thickness,
+                                  thickness:-thickness] = primal_domain[i, thickness:-thickness,
+                                                                        thickness:-thickness,
+                                                                        thickness:-thickness]
         return new_primal_domain
 
     def initial_condition(self,
@@ -197,7 +206,9 @@ class Diffusion(PDE):
                           x_ilocation,
                           x_elocation,
                           y_ilocation,
-                          y_elocation):
+                          y_elocation,
+                          z_ilocation,
+                          z_elocation):
         """
         Description:
         =============
@@ -233,6 +244,11 @@ class Diffusion(PDE):
                 self.primal_domain[0,
                                    x_ilocation:x_elocation,
                                    y_ilocation:y_elocation] = specific_value
+            elif self.primal_domain.ndim == 4:
+                self.primal_domain[0,
+                                   x_ilocation:x_elocation,
+                                   y_ilocation:y_elocation,
+                                   z_ilocation:z_elocation] = specific_value
         else:
             raise ValueError('Could not set primal domain correctly!')
         return None
@@ -275,6 +291,15 @@ class Diffusion(PDE):
                             self.primal_domain[k + 1, i, j] = step_constant * (self.primal_domain[k][i+1][j] + self.primal_domain[k][i-1][j] +
                                                                                self.primal_domain[k][i][j+1] + self.primal_domain[k][i][j-1] -
                                                                                4*self.primal_domain[k][i][j]) + self.primal_domain[k][i][j]
+            elif len(self.space) == 3:
+                for l in range(0, len(self.time)-1, 1):
+                    for k in range(0, len(self.space[0])-1):
+                        for i in range(1, len(self.space[1])-1):
+                            for j in range(1, len(self.space[2])-1):
+                                self.primal_domain[l + 1, k, i, j] = step_constant * (self.primal_domain[l][k][i+1][j] + self.primal_domain[l][k][i-1][j] +
+                                                                                      self.primal_domain[l][k][i][j+1] + self.primal_domain[l][k][i][j-1] +
+                                                                                      self.primal_domain[l][k+1][i][j] + self.primal_domain[l][k-1][i][j] -
+                                                                                      6*self.primal_domain[l][k][i][j]) + self.primal_domain[l][k][i][j]
         else:
             raise ValueError(
                 "Could not set the space, time or primal domain most likely in the simulation!")
@@ -363,10 +388,13 @@ class Diffusion(PDE):
 
 if __name__ == "__main__":
     # implementation
+    from mpl_toolkits.mplot3d import Axes3D
+    import numpy as np
+    import matplotlib.animation as animation
     # set space
     s = Space()
-    s.dimension = Dimension.D.value  # DD for 2D
-    x = s.setup(x_step=60, y_step=60)
+    s.dimension = Dimension.DD.value  # DD for 2D
+    x = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
     time = Time()
@@ -380,7 +408,9 @@ if __name__ == "__main__":
                            x_ilocation=44,
                            x_elocation=46,
                            y_ilocation=10,
-                           y_elocation=15)
+                           y_elocation=15,
+                           z_ilocation=10,
+                           z_elocation=15)
     diff.primal_domain = diff.boundary_condition(diff.primal_domain,
                                                  constant_value=0.0,
                                                  thickness=1)
@@ -391,3 +421,4 @@ if __name__ == "__main__":
                                    frames=len(t),
                                    repeat=False)
     anim.save(f"{s.dimension}D-heat_equation_solution.gif")
+
