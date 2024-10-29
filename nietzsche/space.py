@@ -40,7 +40,7 @@ class Space:
 
         Returns:
         ============
-            Numpy array using np.linspace command
+            List of numpy array using np.linspace
 
         Example:
         ============

@@ -6,11 +6,10 @@ PDEs that the module should be able to solve are:
     to take a space grid and a time grid with some ic and bc
     to solve the problem. 
 
-2.0 Vibration as a subclass, this subclass should be able to
-    to take a space grid and a time grid with some ic and bc
-    to solve the problem.
+2.0 Vibration as a subclass,
 """
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt            # plotting the data
 import matplotlib.animation as animation   # animation of the plot
 from matplotlib.animation import FuncAnimation  # animate a function
@@ -50,6 +49,9 @@ class PDE:
         pass
 
     def solve(self):
+        pass
+
+    def export(self):
         pass
 
 
@@ -94,7 +96,9 @@ class Diffusion(PDE):
         Description:
         ============
             Sets the primal field of the variable that diffuses over time and
-            space in the simulation.
+            space in the simulation. Primal domain is the space domain,
+            but we attach it to the pde solution scheme. We put the shape as 
+            numpy array shape (time, x, y, z, . .)
 
         Parameters:
         ============
@@ -121,7 +125,9 @@ class Diffusion(PDE):
             >>> # set space
             >>> s = Space()
             >>> s.dimension = Dimension.DD.value # DD for 2D
-            >>> x = s.setup()
+            >>> l = s.setup()
+            >>> x = l[0]
+            >>> y = l[1]
             >>> # set time
             >>> time = Time()
             >>> t = time.setup()
@@ -175,6 +181,7 @@ class Diffusion(PDE):
         >>> diff.set_primal_domain(space_array=x,time_array=t)
         >>> diff.boundary_condition(constant_value=1.0)
         """
+        # start the whole domain with a constant value
         new_primal_domain = np.full(primal_domain.shape, constant_value)
         if primal_domain.ndim == 2:
             # iterate over the time axis i.e., new_primal_domain.shape[0]
@@ -305,6 +312,10 @@ class Diffusion(PDE):
                 "Could not set the space, time or primal domain most likely in the simulation!")
         return None
 
+    def export_result(self):
+        df = pd.DataFrame(self.primal_domain[:, :], index=list(self.time))
+        df.to_csv('results.csv')
+
     def diffusion_heatmap(self, pk, k):
         """
         Description:
@@ -391,14 +402,15 @@ if __name__ == "__main__":
     from mpl_toolkits.mplot3d import Axes3D
     import numpy as np
     import matplotlib.animation as animation
+
     # set space
     s = Space()
-    s.dimension = Dimension.DD.value  # DD for 2D
+    s.dimension = Dimension.D.value  # DD for 2D
     x = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
     time = Time()
-    t = time.setup(step=30)
+    t = time.setup(step=60)
 
     # set diffusion
     diff = Diffusion()
@@ -414,10 +426,16 @@ if __name__ == "__main__":
     diff.primal_domain = diff.boundary_condition(diff.primal_domain,
                                                  constant_value=0.0,
                                                  thickness=1)
-    diff.solve(step_constant=0.3)
+    diff.solve(step_constant=0.03)
+    diff.export_result()
+
+    # write the simulation result in a csv
+
+
+    # animate directly from the function
     anim = animation.FuncAnimation(plt.figure(),
                                    diff.animate,
-                                   interval=1,
+                                   interval=0.5,
                                    frames=len(t),
                                    repeat=False)
     anim.save(f"{s.dimension}D-heat_equation_solution.gif")
