@@ -10,6 +10,7 @@ PDEs that the module should be able to solve are:
 """
 import numpy as np
 import pandas as pd
+import h5py
 import matplotlib.pyplot as plt            # plotting the data
 import matplotlib.animation as animation   # animation of the plot
 from matplotlib.animation import FuncAnimation  # animate a function
@@ -313,8 +314,13 @@ class Diffusion(PDE):
         return None
 
     def export_result(self):
-        df = pd.DataFrame(self.primal_domain, index=list(self.time))
+        df = pd.DataFrame(self.primal_domain[:,:], index = self.time)
         df.to_csv('results.csv')
+        # Save the DataFrame to an HDF5 file
+        with h5py.File('finite_difference_results.h5', 'w') as hf:
+            hf.create_dataset('data', data=df.values)
+            hf.create_dataset('time', data=df.index.values)
+            hf.create_dataset('space', data=df.columns.values)
 
     def diffusion_heatmap(self, pk, k):
         """
@@ -405,7 +411,7 @@ if __name__ == "__main__":
 
     # set space
     s = Space()
-    s.dimension = Dimension.DD.value  # DD for 2D
+    s.dimension = Dimension.D.value  # DD for 2D
     sp = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
