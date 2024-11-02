@@ -313,7 +313,7 @@ class Diffusion(PDE):
         return None
 
     def export_result(self):
-        df = pd.DataFrame(self.primal_domain[:, :], index=list(self.time))
+        df = pd.DataFrame(self.primal_domain, index=list(self.time))
         df.to_csv('results.csv')
 
     def diffusion_heatmap(self, pk, k):
@@ -405,8 +405,8 @@ if __name__ == "__main__":
 
     # set space
     s = Space()
-    s.dimension = Dimension.D.value  # DD for 2D
-    x = s.setup(x_step=60, y_step=60, z_step=60)
+    s.dimension = Dimension.DD.value  # DD for 2D
+    sp = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
     time = Time()
@@ -414,7 +414,7 @@ if __name__ == "__main__":
 
     # set diffusion
     diff = Diffusion()
-    diff.set_primal_domain(space_array=x, time_array=t)
+    diff.set_primal_domain(space_array=sp, time_array=t)
     diff.initial_condition(general_value=0.0,
                            specific_value=40.00,
                            x_ilocation=44,
