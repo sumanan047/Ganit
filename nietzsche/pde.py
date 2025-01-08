@@ -423,19 +423,19 @@ if __name__ == "__main__":
 
     # set time
     time = Time()
-    t = time.setup(step=60)
+    t = time.setup(step=600)
 
     # set diffusion
     diff = Diffusion()
     diff.set_primal_domain(space_array=sp, time_array=t)
     diff.initial_condition(general_value=0.0,
-                           specific_value=40.00,
-                           x_ilocation=44,
-                           x_elocation=46,
+                           specific_value=4.00,
+                           x_ilocation=14,
+                           x_elocation=26,
                            y_ilocation=10,
-                           y_elocation=15,
+                           y_elocation=20,
                            z_ilocation=10,
-                           z_elocation=15)
+                           z_elocation=20)
     diff.primal_domain = diff.boundary_condition(diff.primal_domain,
                                                  constant_value=0.0,
                                                  thickness=1)
