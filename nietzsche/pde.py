@@ -17,6 +17,8 @@ from matplotlib.animation import FuncAnimation  # animate a function
 from space import Space
 from time_ import Time
 from utils import Dimension
+from mayavi import mlab
+import imageio
 
 
 class PDE:
@@ -314,13 +316,15 @@ class Diffusion(PDE):
         return None
 
     def export_result(self):
-        df = pd.DataFrame(self.primal_domain[:,:], index = self.time)
-        df.to_csv('results.csv')
-        # Save the DataFrame to an HDF5 file
-        with h5py.File('finite_difference_results.h5', 'w') as hf:
-            hf.create_dataset('data', data=df.values)
-            hf.create_dataset('time', data=df.index.values)
-            hf.create_dataset('space', data=df.columns.values)
+        if self.primal_domain.ndim == 2:
+            df = pd.DataFrame(self.primal_domain[:,:], index = self.time)
+            df.to_csv('results.csv')
+        else:
+            with h5py.File('finite_difference_results.h5', 'w') as hf:
+                hf.create_dataset('data', data=self.primal_domain)
+                hf.create_dataset('time', data=self.time)
+                hf.create_dataset('space', data=self.space)
+
 
     def diffusion_heatmap(self, pk, k):
         """
@@ -354,6 +358,7 @@ class Diffusion(PDE):
 
         # This is to plot u_k (u at time-step k)
         if self.primal_domain is not None:
+            # ndim is 2 when time, x i.e. a 1D problem
             if self.primal_domain.ndim == 2:
                 y_lims = []
                 for i in range(self.primal_domain.shape[0]):
@@ -365,6 +370,8 @@ class Diffusion(PDE):
             elif self.primal_domain.ndim == 3:
                 plt.imshow(self.primal_domain[k, :, :])
                 plt.colorbar()
+            elif self.primal_domain.ndim == 4:
+                pass
         else:
             raise ValueError("This is not Good man")
         # plt.pcolormesh(self.primal_domain, cmap="coolwarm", vmin=0, vmax=15)
@@ -411,7 +418,7 @@ if __name__ == "__main__":
 
     # set space
     s = Space()
-    s.dimension = Dimension.D.value  # DD for 2D
+    s.dimension = Dimension.DDD.value  # DD for 2D
     sp = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
@@ -434,15 +441,30 @@ if __name__ == "__main__":
                                                  thickness=1)
     diff.solve(step_constant=0.03)
     diff.export_result()
-
-    # write the simulation result in a csv
-
-
     # animate directly from the function
-    anim = animation.FuncAnimation(plt.figure(),
+    if diff.primal_domain.ndim == 1 or diff.primal_domain.ndim == 2 or diff.primal_domain.ndim ==3:
+        anim = animation.FuncAnimation(plt.figure(),
                                    diff.animate,
                                    interval=0.5,
                                    frames=len(t),
                                    repeat=False)
-    anim.save(f"{s.dimension}D-heat_equation_solution.gif")
-
+        anim.save(f"{s.dimension}D-heat_equation_solution.gif")
+    elif diff.primal_domain.ndim == 4: 
+        mlab.figure(size=(800, 600))
+        for k in range(len(diff.primal_domain)):
+            src = mlab.pipeline.scalar_field(diff.primal_domain[k, :, :, :])
+            mlab.clf() # clear the figure before plotting the next frame
+            vol = mlab.pipeline.volume(src)
+            vol.module_manager.scalar_lut_manager.lut.table = vol.module_manager.scalar_lut_manager.lut.table 
+            mlab.axes()
+            mlab.title(f"Pressure at time = {k*diff.dt:.1f} unit time")
+            # mlab.show()
+            mlab.savefig(f"frame_{k}.png")
+        mlab.close()
+        images = [imageio.v2.imread(f"frame_{k}.png") for k in range(len(diff.primal_domain))]
+        # create a gif from the images
+        imageio.mimsave("3D-heat_equation_solution.gif", images, fps=10)
+        # remove the png files
+        import os
+        for k in range(len(diff.primal_domain)):
+            os.remove(f"frame_{k}.png")

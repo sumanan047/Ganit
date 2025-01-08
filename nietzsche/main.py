@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # ========= IMPLEMENTATION ========================
     # set space
     s = Space()
-    s.dimension = Dimension.D.value  # DD for 2D
+    s.dimension = Dimension.DDD.value  # DD for 2D
     sp = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
@@ -37,7 +37,12 @@ if __name__ == "__main__":
     diff.solve(step_constant=0.03)
 
     # write the simulation result in a csv
-    diff.export_result()
+    if s.dimension == 1:
+        diff.export_result()
+    elif s.dimension == 2:
+        pass
+    elif s.dimension == 3:
+        pass
 
     # animate directly from the function
     anim = animation.FuncAnimation(plt.figure(),
