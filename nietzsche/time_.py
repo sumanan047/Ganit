@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Time:
     def __init__(self) -> None:
         self.reletivistic = False
