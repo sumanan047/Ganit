@@ -1,6 +1,6 @@
-numpy==1.20
-matplotlib==3.3
-imageio==2.9
-h5py==3.2
-mayavi==4.7
-pytest==6.2
+numpy==1.26.2
+matplotlib==3.8.4
+imageio==2.36.1
+h5py==3.11.0
+mayavi==4.8.2
+pytest==8.2.0
