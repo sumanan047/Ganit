@@ -4,4 +4,5 @@ imageio==2.36.1
 h5py==3.11.0
 mayavi==4.8.2
 pandas==2.2.3
+configobj==5.0.9
 pytest==8.2.0
