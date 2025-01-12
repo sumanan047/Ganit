@@ -12,7 +12,9 @@ This will be updated soon.
 
 ## Usage
 
-nietzsche is a python package so it can be imported into your project to solve partial differential equations.
+Ganit is a python package so it can be imported into your project to solve partial differential equations.  See the example in `example.py` and the demonstration below.
+
+![Animation of solution](assets/2D-heat_equation_solution.gif)
 
 ## License
 

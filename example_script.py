@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # ========= IMPLEMENTATION ========================
     # set space
     s = Space()
-    s.dimension = Dimension.DDD.value  # DD for 2D
+    s.dimension = Dimension.DD.value  # DD for 2D
     sp = s.setup(x_step=60, y_step=60, z_step=60)
 
     # set time
