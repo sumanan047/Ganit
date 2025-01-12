@@ -1,5 +1,5 @@
 import numpy as np
-from utils import Dimension
+from .utils import Dimension
 
 
 class Space:

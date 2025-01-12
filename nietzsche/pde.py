@@ -14,11 +14,12 @@ import h5py
 import matplotlib.pyplot as plt            # plotting the data
 import matplotlib.animation as animation   # animation of the plot
 from matplotlib.animation import FuncAnimation  # animate a function
-from space import Space
-from time_ import Time
-from utils import Dimension
 from mayavi import mlab
 import imageio
+
+from .space import Space
+from .time_ import Time
+from .utils import Dimension
 
 
 class PDE:

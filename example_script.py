@@ -3,10 +3,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.animation as animation
 
-from time_ import Time
-from space import Space
-from pde import Diffusion
-from utils import Dimension
+from nietzsche.time_ import Time
+from nietzsche.space import Space
+from nietzsche.pde import Diffusion
+from nietzsche.utils import Dimension
 
 
 if __name__ == "__main__":
