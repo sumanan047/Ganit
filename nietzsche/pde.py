@@ -370,7 +370,7 @@ class Diffusion(PDE):
                 plt.plot(self.primal_domain[k])
             elif self.primal_domain.ndim == 3:
                 plt.imshow(self.primal_domain[k, :, :])
-                plt.colorbar()
+                plt.colorbar(extend='both')
             elif self.primal_domain.ndim == 4:
                 pass
         else:
