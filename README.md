@@ -14,7 +14,12 @@ This will be updated soon.
 
 nietzsche is a python package so it can be imported into your project to solve partial differential equations.  See the example in `example_script.py` and the demonstration below.
 
-![Animation of solution](/assets/2D-heat_equation_solution.gif)
+> Example 1.0
+Small Point Source Diffusion:
+![Animation of point source solution](/assets/2D-heat_equation_solution.gif)
+> Example 2.0
+Rectangular section diffusion
+![Animation of rectangular section solution](/assets/2D-heat_equation_solution_rect.gif)
 
 ## License
 

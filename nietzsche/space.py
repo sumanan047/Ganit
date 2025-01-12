@@ -65,8 +65,8 @@ class Space:
         if self.dimension == 3:
             return [self.sx, self.sy, self.sz]
         elif self.dimension == 2:
-            return [self.x, self.y]
+            return [self.sx, self.sy]
         elif self.dimension == 1:
-            return [self.x]
+            return [self.sx]
         else:
             raise ValueError('Failed to set the space for solution!')

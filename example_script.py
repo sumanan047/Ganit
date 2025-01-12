@@ -25,7 +25,7 @@ if __name__ == "__main__":
     diff.set_primal_domain(space_array=sp, time_array=t)
     diff.initial_condition(general_value=0.0,
                             specific_value=40.00,
-                            x_ilocation=44,
+                            x_ilocation=4,
                             x_elocation=46,
                             y_ilocation=10,
                             y_elocation=15,
