@@ -3,9 +3,9 @@ from .utils import Dimension
 
 
 class Space:
-    def __init__(self) -> None:
-        self.dimension = Dimension.D.value  # default is a 1D dim value
-        self.geometry = "Euclidean"
+    def __init__(self, dimension=Dimension.D.value, geometry="Euclidean") -> None:
+        self.dimension = dimension
+        self.geometry = geometry
 
     def setup(self, x_start=0, x_stop=1, x_step=25,
               y_start=0, y_stop=1, y_step=25,

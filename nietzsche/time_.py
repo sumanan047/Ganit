@@ -1,8 +1,8 @@
 import numpy as np
 
 class Time:
-    def __init__(self) -> None:
-        self.reletivistic = False
+    def __init__(self, reletivistic=False) -> None:
+        self.reletivistic = reletivistic
 
     def setup(self, start: float = 0.0, step: int = 100, dt: float = 0.1):
         """

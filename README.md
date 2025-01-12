@@ -1,4 +1,4 @@
-# Ganit: A Mathematical Calculation Library
+# Nietzsche: A Finite Difference Solving Package
 
 This repository contains a library for solving simple partial differential equations. The library is designed to be efficient, accurate, and easy to use.
 
