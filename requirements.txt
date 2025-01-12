@@ -3,4 +3,5 @@ matplotlib==3.8.4
 imageio==2.36.1
 h5py==3.11.0
 mayavi==4.8.2
+pandas==2.2.3
 pytest==8.2.0
