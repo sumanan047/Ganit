@@ -1,7 +1,6 @@
 # ignore python cache files
 *.pyc
 # ignore image files
-*.gif
 *.jpeg
 *.png
 *.csv
