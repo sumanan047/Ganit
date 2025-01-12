@@ -1,13 +1,3 @@
-"""
-PDE class
-=========
-PDEs that the module should be able to solve are:
-1.0 Diffusion as a subclass, this subclass should be able
-    to take a space grid and a time grid with some ic and bc
-    to solve the problem. 
-
-2.0 Vibration as a subclass,
-"""
 import numpy as np
 import pandas as pd
 import h5py
@@ -16,11 +6,9 @@ import matplotlib.animation as animation   # animation of the plot
 from matplotlib.animation import FuncAnimation  # animate a function
 from mayavi import mlab
 import imageio
-
 from .space import Space
 from .time_ import Time
 from .utils import Dimension
-
 
 class PDE:
     """
