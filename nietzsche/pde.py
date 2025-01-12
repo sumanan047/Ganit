@@ -50,14 +50,43 @@ class PDE:
         self.time = None
 
     def setup(self):
+        """
+        Description:
+        ============
+            Setup the PDE problem
+        
+        Keyword arguments:
+        argument -- description
+        Return: return_description
+        """
+        
         pass
 
     def solve(self):
+        """
+        Description:
+        ============
+            Solve the PDE problem
+        
+        Keyword arguments:
+        argument -- description
+        Return: return_description
+        """
+        
         pass
 
     def export(self):
+        """
+        Description:
+        ============
+            Export the PDE solution to a file in form of a h5py file
+        
+        Keyword arguments:
+        argument -- description
+        Return: return_description
+        """
+        
         pass
-
 
 class Diffusion(PDE):
     def __init__(self) -> None:
@@ -65,10 +94,10 @@ class Diffusion(PDE):
         # supposed to contain a description about the PDE class
         self.about = None
         self.solution_mode = "FDM"          # sets the solution mode for the PDE
-        self.space = None
-        self.time = None
-        self.primal_domain = None
-        self.dt = None
+        self.space = None # space domain to be used by the diffusion simulation
+        self.time = None # time domain to be used by the diffusion simulation
+        self.primal_domain = None # the primal domain for the diffusion simulation
+        self.dt = None # dt value for the simulation in case explicit scheme is invalid
 
     def set_dt(self):
         """

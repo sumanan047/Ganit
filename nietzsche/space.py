@@ -1,11 +1,21 @@
 import numpy as np
 from .utils import Dimension
 
-
+"""
+The Space class produced a space domain for the solution of the PDE.
+Eucledean space is the default space domain for the solution of the PDE.
+The space domain is set using the setup method which takes the start, stop and step-size
+for each dimension.
+Setup returns a list of numpy array for each dimension of the space domain in the
+order of x, y, z.
+"""
 class Space:
     def __init__(self, dimension=Dimension.D.value, geometry="Euclidean") -> None:
         self.dimension = dimension
         self.geometry = geometry
+        self.sx = None
+        self.sy = None
+        self.sz = None
 
     def setup(self, x_start=0, x_stop=1, x_step=25,
               y_start=0, y_stop=1, y_step=25,
@@ -49,23 +59,14 @@ class Space:
             >>> s.dimension = Dimension.DD.value # DD for 2D
             >>> x = s.setup()
         """
-        x = np.linspace(x_start, x_stop, x_step)
-        y = np.linspace(y_start, y_stop, y_step)
-        z = np.linspace(z_start, z_stop, z_step)
+        self.sx = np.linspace(x_start, x_stop, x_step)
+        self.sy = np.linspace(y_start, y_stop, y_step)
+        self.sz = np.linspace(z_start, z_stop, z_step)
         if self.dimension == 3:
-            return [x, y, z]
+            return [self.sx, self.sy, self.sz]
         elif self.dimension == 2:
-            return [x, y]
+            return [self.x, self.y]
         elif self.dimension == 1:
-            return [x]
+            return [self.x]
         else:
             raise ValueError('Failed to set the space for solution!')
-
-
-if __name__ == "__main__":
-    s = Space()
-    s.dimension = Dimension.DDD.value
-    x = s.setup()
-    print(s.dimension)
-    print(s.geometry)
-    print(s.setup())

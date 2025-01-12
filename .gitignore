@@ -5,3 +5,7 @@
 *.png
 *.csv
 *.h5
+
+#ignore build files
+build
+source

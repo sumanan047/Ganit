@@ -1,7 +1,10 @@
+import os
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.animation as animation
+import mayavi.mlab as mlab
+import imageio
 
 from nietzsche.time_ import Time
 from nietzsche.space import Space
@@ -57,6 +60,5 @@ elif diff.primal_domain.ndim == 4:
     # create a gif from the images
     imageio.mimsave("3D-heat_equation_solution.gif", images, fps=10)
     # remove the png files
-    import os
     for k in range(len(diff.primal_domain)):
         os.remove(f"frame_{k}.png")
